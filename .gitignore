@@ -1,0 +1,7 @@
+*.jar
+*.class
+.classpath
+.project
+.settings
+target
+eclipse-classes
