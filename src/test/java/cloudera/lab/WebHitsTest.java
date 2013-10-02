@@ -34,10 +34,16 @@ public class WebHitsTest {
 	@Test
 	public void testMapper() {
 		
-		Text record = new Text("10.223.157.186 - - [15/Jul/2009:14:58:59 -0700] \"GET / HTTP/1.1\" 403 202");
-		mapDriver.withInput(new LongWritable(3), record);
+		//Text record1 = new Text("10.223.157.186 - - [15/Jul/2009:14:58:59 -0700] \"GET / HTTP/1.1\" 403 202");		
+		Text record2 = new Text("10.223.157.111 - - [15/Sep/2009:14:58:59 -0700] \"GET / HTTP/1.1\" 403 202");
+		
+		mapDriver
+		//.withInput(new LongWritable(1), record1)
+		.withInput(new LongWritable(1), record2);
 
-		mapDriver.withOutput(new Text("10.223.157.186"), new IntWritable(1));
+		mapDriver
+		.withOutput(new Text("10.223.157.111	Sep"), new IntWritable(1));
+		//.withOutput(new Text("10.223.157.186	Jul"), new IntWritable(1));
 		
 		mapDriver.runTest();
 	}
@@ -55,8 +61,8 @@ public class WebHitsTest {
 		Text record3 = new Text("10.223.157.186 - - [15/Jul/2009:14:58:59 -0700] \"GET / HTTP/1.1\" 403 202");
 		mapReduceDriver.withInput(new LongWritable(3), record3);
 
-		mapReduceDriver.withOutput(new Text("10.153.239.5"), new IntWritable(2));
-		mapReduceDriver.withOutput(new Text("10.223.157.186"), new IntWritable(1));
+		mapReduceDriver.withOutput(new Text("10.153.239.5	Jul"), new IntWritable(2));
+		mapReduceDriver.withOutput(new Text("10.223.157.186	Jul"), new IntWritable(1));
 		
 		mapReduceDriver.runTest();
 	}

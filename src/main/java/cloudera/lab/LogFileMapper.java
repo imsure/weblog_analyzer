@@ -10,7 +10,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 public class LogFileMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 
-	private Text IPAddr = new Text();
+	private Text IPMonth = new Text();
 	private IntWritable numHits = new IntWritable();
 	private Map<String, Integer> hit_count;
 	private LogRecordParser record_parser = new LogRecordParser();
@@ -28,12 +28,14 @@ public class LogFileMapper extends Mapper<LongWritable, Text, Text, IntWritable>
 		String line = value.toString();
 		record_parser.feedInput(line);
 		String ip_addr = record_parser.extractIPAddress();
+		String month = record_parser.extractMonth();
 
-		if (ip_addr != null) {
-			if (hit_count.containsKey(ip_addr)) {
-				hit_count.put(ip_addr, hit_count.get(ip_addr) + 1);
+		if (ip_addr != null && month != null) {
+			String ip_month = ip_addr + "\t" + month;
+			if (hit_count.containsKey(ip_month)) {
+				hit_count.put(ip_month, hit_count.get(ip_month) + 1);
 			} else {
-				hit_count.put(ip_addr, 1);
+				hit_count.put(ip_month, 1);
 			}
 		}
 	}
@@ -41,10 +43,10 @@ public class LogFileMapper extends Mapper<LongWritable, Text, Text, IntWritable>
 	@Override
 	public void cleanup(Context context) 
 			throws IOException, InterruptedException {
-		for (String ip_addr : hit_count.keySet()) {
-			IPAddr.set(ip_addr);
-			numHits.set(hit_count.get(ip_addr));
-			context.write(IPAddr, numHits);
+		for (String ip_month : hit_count.keySet()) {
+			IPMonth.set(ip_month);
+			numHits.set(hit_count.get(ip_month));
+			context.write(IPMonth, numHits);
 		}
 	}
 }
