@@ -33,20 +33,11 @@ public class WebHitsTest {
 
 	@Test
 	public void testMapper() {
-
-		Text record1 = new Text("10.153.239.5 - - [29/Jul/2009:09:25:40 -0700] \"GET " +
-				"/release-schedule/ HTTP/1.1\" 200 9903");
-		mapDriver.withInput(new LongWritable(1), record1);
-
-		//Text record2 = new Text("10.153.239.5 - - [29/Jul/2009:09:25:40 -0700] " +
-		//		"\"GET /assets/js/lowpro.js HTTP/1.1\" 304 -");
-		//mapDriver.withInput(new LongWritable(2), record2);
 		
-		Text record3 = new Text("10.223.157.186 - - [15/Jul/2009:14:58:59 -0700] \"GET / HTTP/1.1\" 403 202");
-		mapDriver.withInput(new LongWritable(3), record3);
+		Text record = new Text("10.223.157.186 - - [15/Jul/2009:14:58:59 -0700] \"GET / HTTP/1.1\" 403 202");
+		mapDriver.withInput(new LongWritable(3), record);
 
 		mapDriver.withOutput(new Text("10.223.157.186"), new IntWritable(1));
-		//mapDriver.withOutput(new Text("10.153.239.5"), new IntWritable(1));
 		
 		mapDriver.runTest();
 	}

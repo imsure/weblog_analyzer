@@ -13,6 +13,7 @@ public class LogFileMapper extends Mapper<LongWritable, Text, Text, IntWritable>
 	private Text IPAddr = new Text();
 	private IntWritable numHits = new IntWritable();
 	private Map<String, Integer> hit_count;
+	private LogRecordParser record_parser = new LogRecordParser();
 
 	@Override
 	public void setup(Context context)
@@ -23,17 +24,20 @@ public class LogFileMapper extends Mapper<LongWritable, Text, Text, IntWritable>
 	@Override
 	public void map(LongWritable key, Text value, Context context)
 			throws IOException, InterruptedException {
-		
+
 		String line = value.toString();
-		String ip_addr = line.split(" ")[0];
-		
-		if (hit_count.containsKey(ip_addr)) {
-			hit_count.put(ip_addr, hit_count.get(ip_addr) + 1);
-		} else {
-			hit_count.put(ip_addr, 1);
+		record_parser.feedInput(line);
+		String ip_addr = record_parser.extractIPAddress();
+
+		if (ip_addr != null) {
+			if (hit_count.containsKey(ip_addr)) {
+				hit_count.put(ip_addr, hit_count.get(ip_addr) + 1);
+			} else {
+				hit_count.put(ip_addr, 1);
+			}
 		}
 	}
-	
+
 	@Override
 	public void cleanup(Context context) 
 			throws IOException, InterruptedException {
