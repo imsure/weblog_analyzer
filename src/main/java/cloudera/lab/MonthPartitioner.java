@@ -37,6 +37,6 @@ public class MonthPartitioner extends Partitioner<Text, IntWritable> implements 
 	@Override
 	public int getPartition(Text key, IntWritable value, int numReduceTasks) {
 		String month = key.toString().split("\t")[1];
-		return (int)(month2reducer.get(value.toString()));
+		return (int)(month2reducer.get(month));
 	}
 }

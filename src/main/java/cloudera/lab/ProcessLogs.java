@@ -30,6 +30,8 @@ public class ProcessLogs extends Configured implements Tool {
 		job.setReducerClass(WebHitsReducer.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
+		job.setNumReduceTasks(12);
+		job.setPartitionerClass(MonthPartitioner.class);
 
 		FileInputFormat.setInputPaths(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
