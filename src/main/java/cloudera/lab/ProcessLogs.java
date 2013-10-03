@@ -10,6 +10,8 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
+import cloudera.lab.FileRequestMapper.ImageCounter;
+
 public class ProcessLogs extends Configured implements Tool {
 
 	@Override
@@ -24,16 +26,29 @@ public class ProcessLogs extends Configured implements Tool {
 
 		Job job = new Job(getConf());
 		job.setJarByClass(ProcessLogs.class);
-		job.setJobName("Web Hits Counter");
+		job.setJobName("Web Resources Counter");
 		job.setMapperClass(FileRequestMapper.class);
-		//job.setReducerClass(WebHitsReducer.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
+		job.setNumReduceTasks(0);
 
 		FileInputFormat.setInputPaths(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
-		return (job.waitForCompletion(true) ? 0 : 1);
+		boolean success = job.waitForCompletion(true);
+
+		if (success) {
+			long gif_count = job.getCounters().findCounter(ImageCounter.GIF).getValue();
+			long jpg_count = job.getCounters().findCounter(ImageCounter.JPEG).getValue();
+			long other_count = job.getCounters().findCounter(ImageCounter.OTHER).getValue();
+
+			System.out.println("JPG   = " + jpg_count);
+			System.out.println("GIF   = " + gif_count);
+			System.out.println("OTHER = " + other_count);
+			return 0;
+		} else {
+			return 1;
+		}
 	}
 
 	public static void main(String[] args) throws Exception {
