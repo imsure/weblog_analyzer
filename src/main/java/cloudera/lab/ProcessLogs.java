@@ -4,7 +4,8 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+import org.apache.hadoop.mapreduce.lib.output.NullOutputFormat;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
@@ -17,8 +18,8 @@ public class ProcessLogs extends Configured implements Tool {
 	@Override
 	public int run(String[] args) throws Exception {
 
-		if (args.length != 2) {
-			System.err.printf("Usage: %s [generic options] <input> <output>\n",
+		if (args.length != 1) {
+			System.err.printf("Usage: %s [generic options] [input path]\n",
 					getClass().getSimpleName());
 			ToolRunner.printGenericCommandUsage(System.err);
 			System.exit(-1);
@@ -28,13 +29,16 @@ public class ProcessLogs extends Configured implements Tool {
 		job.setJarByClass(ProcessLogs.class);
 		job.setJobName("Web Resources Counter");
 		job.setMapperClass(FileRequestMapper.class);
+		
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
 		job.setNumReduceTasks(0);
 
+		// No output needed for the job.
+		job.setOutputFormatClass(NullOutputFormat.class);
+		
 		FileInputFormat.setInputPaths(job, new Path(args[0]));
-		FileOutputFormat.setOutputPath(job, new Path(args[1]));
-
+		
 		boolean success = job.waitForCompletion(true);
 
 		if (success) {
