@@ -8,13 +8,19 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class LogFileMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+public class FileRequestMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 
 	private Text IPAddr = new Text();
 	private IntWritable numHits = new IntWritable();
 	private Map<String, Integer> hit_count;
 	private LogRecordParser record_parser = new LogRecordParser();
 
+	private enum ImageCounter {
+		GIF,
+		JPEG,
+		OTHER
+	}
+	
 	@Override
 	public void setup(Context context)
 			throws IOException, InterruptedException {

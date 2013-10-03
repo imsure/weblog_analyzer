@@ -19,16 +19,13 @@ public class WebHitsTest {
 
 	@Before
 	public void setUp() {
-		LogFileMapper mapper = new LogFileMapper();
-		WebHitsReducer reducer = new WebHitsReducer();
+		FileRequestMapper mapper = new FileRequestMapper();
 
 		mapDriver = new MapDriver<LongWritable, Text, Text, IntWritable>();
 		mapDriver.setMapper(mapper);
-		reduceDriver = new ReduceDriver<Text, IntWritable, Text, IntWritable>();
-		reduceDriver.setReducer(reducer);
+		
 		mapReduceDriver = new MapReduceDriver<LongWritable, Text, Text, IntWritable, Text, IntWritable>();
 		mapReduceDriver.setMapper(mapper);
-		mapReduceDriver.setReducer(reducer);
 	}
 
 	@Test

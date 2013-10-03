@@ -19,15 +19,14 @@ public class ProcessLogs extends Configured implements Tool {
 			System.err.printf("Usage: %s [generic options] <input> <output>\n",
 					getClass().getSimpleName());
 			ToolRunner.printGenericCommandUsage(System.err);
-			//System.out.printf("Usage: WordCount <input dir> <output dir>\n");
 			System.exit(-1);
 		}
 
 		Job job = new Job(getConf());
 		job.setJarByClass(ProcessLogs.class);
 		job.setJobName("Web Hits Counter");
-		job.setMapperClass(LogFileMapper.class);
-		job.setReducerClass(WebHitsReducer.class);
+		job.setMapperClass(FileRequestMapper.class);
+		//job.setReducerClass(WebHitsReducer.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
 
