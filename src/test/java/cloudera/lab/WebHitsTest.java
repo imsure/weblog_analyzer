@@ -34,16 +34,16 @@ public class WebHitsTest {
 	@Test
 	public void testMapper() {
 		
-		//Text record1 = new Text("10.223.157.186 - - [15/Jul/2009:14:58:59 -0700] \"GET / HTTP/1.1\" 403 202");		
-		Text record2 = new Text("10.223.157.111 - - [15/Sep/2009:14:58:59 -0700] \"GET / HTTP/1.1\" 403 202");
+		Text record1 = new Text("10.223.157.186 - - [15/Jul/2009:14:58:59 -0700] \"GET / HTTP/1.1\" 403 202\n");		
+		Text record2 = new Text("10.223.157.111 - - [15/Sep/2009:14:58:59 -0700] \"GET / HTTP/1.1\" 403 202\n");
 		
 		mapDriver
-		//.withInput(new LongWritable(1), record1)
-		.withInput(new LongWritable(1), record2);
+		.withInput(new LongWritable(1), record1)
+		.withInput(new LongWritable(2), record2);
 
 		mapDriver
-		.withOutput(new Text("10.223.157.111	Sep"), new IntWritable(1));
-		//.withOutput(new Text("10.223.157.186	Jul"), new IntWritable(1));
+		.withOutput(new Text("10.223.157.111	Sep"), new IntWritable(1))
+		.withOutput(new Text("10.223.157.186	Jul"), new IntWritable(1));
 		
 		mapDriver.runTest();
 	}
